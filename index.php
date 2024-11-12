@@ -1,3 +1,59 @@
+
+<?php
+
+
+include('database/db.php');
+
+if(isset($_POST['submit'])){
+
+  $email = $_POST['email'];
+  $pass = $_POST['password'];
+
+
+  $sql = "SELECT * FROM users where Email = '$email'";
+  $result = mysqli_query($conn, $sql);
+
+  $row = mysqli_num_rows($result);
+    
+  if($row>0){
+
+      $user = mysqli_fetch_assoc($result);
+
+      $user_pass = $user['Pass'];
+      $sn = $user['SN'];
+
+      if($pass == $user_pass){
+
+        header('location: dashboard.php?uid='.$sn.'');
+        session_start();
+        $_SESSION['user'] = $email;
+      }else{
+        echo'
+        <div class="alert alert-danger container mt-5 w-50" role="alert">
+         Incorrect Password Try Again!
+        </div> 
+      ';
+      }
+
+
+
+
+  }else{
+    echo'
+      <div class="alert alert-warning container" role="alert">
+        No user Found
+      </div> 
+    ';
+  }
+
+
+
+
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +77,7 @@
                 </div>
               </div>
             </div>
-            <form action="#!">
+            <form action="index.php" method="POST">
               <div class="row gy-3 gy-md-4 overflow-hidden">
                 <div class="col-12">
                   <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -41,7 +97,7 @@
                 </div>
                 <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn btn-lg btn-primary" type="submit">Log in now</button>
+                    <button class="btn btn-lg btn-primary" name="submit" type="submit">Log in now</button>
                   </div>
                 </div>
               </div>

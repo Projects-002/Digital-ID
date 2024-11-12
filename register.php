@@ -35,26 +35,6 @@ if(isset($_POST['submit'])){
       echo'<script>User Already Exist</script>';
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
