@@ -1,7 +1,6 @@
 
 <?php
 
-
 include('database/db.php');
 
 if(isset($_POST['submit'])){
@@ -35,12 +34,9 @@ if(isset($_POST['submit'])){
       ';
       }
 
-
-
-
-  }else{
-    echo'
-      <div class="alert alert-warning container" role="alert">
+    }else{
+     echo'
+       <div class="alert alert-warning container" role="alert">
         No user Found
       </div> 
     ';
