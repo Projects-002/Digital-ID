@@ -3,51 +3,48 @@
 
 include('database/db.php');
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $pass = $_POST['password'];
 
-  $email = $_POST['email'];
-  $pass = $_POST['password'];
-
-
-  $sql = "SELECT * FROM users where Email = '$email'";
-  $result = mysqli_query($conn, $sql);
-
-  $row = mysqli_num_rows($result);
+    // Get the user with the provided email/username
+    $sql = "SELECT * FROM users WHERE Email = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, 's', $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     
-  if($row>0){
+    if($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        
+        // Verify the password
+        if($pass == $user['Pass']) {
+            session_start();
+            $_SESSION['user'] = $username;
 
-      $user = mysqli_fetch_assoc($result);
-
-      $user_pass = $user['Pass'];
-      $sn = $user['SN'];
-
-      if($pass == $user_pass){
-
-        header('location: dashboard.php?uid='.$sn.'');
-        session_start();
-        $_SESSION['user'] = $email;
-      }else{
-        echo'
+            // Redirect based on user role
+            if($user['U_Role'] == 'user') {
+                header('location: dashboard.php?uid='.$user['SN']);
+            } else {
+                header('location: Admin/index.php?uid='.$user['SN']);
+            }
+            exit();
+        } else {
+            echo '
+            <div class="alert alert-danger container mt-5 w-50" role="alert">
+                Incorrect Password. Please try again!
+            </div>';
+        }
+    } else {
+        echo '
         <div class="alert alert-danger container mt-5 w-50" role="alert">
-         Incorrect Password Try Again!
-        </div> 
-      ';
-      }
-
-    }else{
-     echo'
-       <div class="alert alert-warning container" role="alert">
-        No user Found
-      </div> 
-    ';
-  }
-
-
-
-
+            Username not found. Please try again!
+        </div>';
+    }
 }
 
 ?>
+
 
 
 <!DOCTYPE html>
@@ -76,12 +73,12 @@ if(isset($_POST['submit'])){
             <form action="index.php" method="POST">
               <div class="row gy-3 gy-md-4 overflow-hidden">
                 <div class="col-12">
-                  <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                  <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                  <label for="email" class="form-label">Username <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" name="username" id="email" placeholder="Enter  your username" required>
                 </div>
                 <div class="col-12">
                   <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                  <input type="password" class="form-control" name="password" id="password" value="" required>
+                  <input type="password" class="form-control" name="password" id="password" value="" placeholder="Enter password" required>
                 </div>
                 <div class="col-12">
                   <div class="form-check">

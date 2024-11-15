@@ -7,6 +7,20 @@ if(!isset($_SESSION['user'])){
 }
 
 
+$user = $_GET['uid'];
+
+
+    $sql = "SELECT * FROM users where SN = $user";
+
+    $result = mysqli_query($conn, $sql);
+
+    $row = mysqli_fetch_assoc($result);
+
+    $f_name = $row['First_Name'];
+    $l_name = $row['Last_Name'];
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -47,15 +61,15 @@ if(!isset($_SESSION['user'])){
 
                             <!-- Header -->
                             <div class="certificate-header">
-                                <h1>Digital Identity</h1>
-                                <h2>This is awarded to</h2>
+                                <h1>Zetech University</h1>
+                                <h2>Digital Identity</h2>
                                 <div class="decorative-line"></div>
                             </div>
 
                             <!-- Awardee Name -->
                             <div class="certificate-awardee">
 
-                                        <p class="alert alert-warning" role="alert">Ismael Bett</p>
+                                        <p class="alert alert-warning" role="alert"><?php echo "$f_name $l_name";  ?></p>
                                 
                             </div>
 
@@ -68,8 +82,8 @@ if(!isset($_SESSION['user'])){
                             <div class="certificate-footer">
                                 <div class="signature">
                                     <hr>
-                                    <p>Hope</p>
-                                    <small>Head Manager</small>
+                                    <p>Tusinde</p>
+                                    <small>Registra</small>
                                 </div>
                                 <div class="certificate-badge">
                                     <img src="https://img.icons8.com/emoji/48/000000/sports-medal-emoji.png" alt="Medal Icon">
